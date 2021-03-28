@@ -32,34 +32,36 @@ public class Reservation {
 
 	public Date getCheckOut() {
 		return checkOut;
-	}	
-	
-	public long duration() {
-		
-		// Diferença entre as duas datas em milesegundos
-		long diff = checkOut.getTime() - checkIn.getTime();
-		
-		// Transformar a diferença das datas em milesgundos para dias
-		// Usando uma Classe enumerada
-		 return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);		
-	}
-	
-	public void updateDates(Date checkIn, Date checkOut) {
-		this.checkIn = checkIn;
-		this.checkOut = checkOut;
 	}
 
+	public long duration() {
+		long diff = checkOut.getTime() - checkIn.getTime();
+		return TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS);
+	}
+	
+	public String updateDates(Date checkIn, Date checkOut) {
+		Date now = new Date();
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return "Reservation dates for update must be future dates";
+		}
+		if (!checkOut.after(checkIn)) {
+			return "Check-out date must be after check-in date";
+		}
+		this.checkIn = checkIn;
+		this.checkOut = checkOut;
+		return null;
+	}
+	
 	@Override
 	public String toString() {
 		return "Room "
-				+ roomNumber
-				+ ", check-in: "
-				+ sdf.format(checkIn)
-				+", check-out: "
-				+ sdf.format(checkOut)
-				+ ", "
-				+ duration()
-				+ " nights";
-	}	
+			+ roomNumber
+			+ ", check-in: "
+			+ sdf.format(checkIn)
+			+ ", check-out: "
+			+ sdf.format(checkOut)
+			+ ", "
+			+ duration()
+			+ " nights";
+	}
 }
-
